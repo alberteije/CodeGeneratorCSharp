@@ -1,0 +1,19 @@
+﻿using [NamespaceCliente].ViewModel;
+using System.Windows.Controls;
+
+namespace [NamespaceCliente].View
+{
+    /// <summary>
+    /// Interaction logic for [NomeTabela]Principal.xaml
+    /// </summary>
+    public partial class [NomeTabela]Principal : UserControl
+    {
+        private [NomeTabela]ViewModel viewModel;
+        public [NomeTabela]Principal()
+        {
+            InitializeComponent();
+            viewModel = new [NomeTabela]ViewModel();
+            this.DataContext = viewModel;
+        }
+    }
+}

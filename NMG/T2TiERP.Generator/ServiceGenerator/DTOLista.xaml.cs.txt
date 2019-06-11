@@ -1,0 +1,17 @@
+﻿using [NamespaceCliente].ViewModel;
+using System.Windows.Controls;
+
+namespace [NamespaceCliente].View
+{
+    /// <summary>
+    /// Interaction logic for [NomeTabela].xaml
+    /// </summary>
+    public partial class [NomeTabela]Lista : UserControl
+    {
+        public [NomeTabela]Lista()
+        {
+            InitializeComponent();
+			ViewModelBase.DataGridExportacao = this.dataGrid;
+        }
+    }
+}

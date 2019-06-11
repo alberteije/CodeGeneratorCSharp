@@ -1,0 +1,129 @@
+﻿        #region MetodoClient que estende a classe ???ServiceReference
+
+        [SearchWindowDataSource(typeof([NomeTabela]DTO))]
+        public new List<[NomeTabela]DTO> select[NomeTabela]([NomeTabela]DTO dtoPesquisa)
+        {
+            return base.select[NomeTabela](dtoPesquisa);
+        }
+
+		#Metodo de pesquisa SearchWindow
+        public void pesquisar[NomeTabela]()
+        {
+            try
+            {
+                SearchWindowApp searchWindow = new SearchWindowApp(typeof([NomeTabela]DTO),
+                    typeof(Servico[NomeTabela]));
+
+                if (searchWindow.ShowDialog() == true)
+                {
+                    [NomeTabelaPai]Selected.[NomeTabela] = ([NomeTabela]DTO)searchWindow.itemSelecionado;
+                    notifyPropertyChanged("[NomeTabelaPai]Selected");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+		#endregion
+
+		#region MetodoService para salvar mestre detalhe
+		public [NomeTabelaPai]DTO saveOrUpdate([NomeTabelaPai]DTO objeto)
+        {
+            try
+            {
+                base.saveOrUpdate<ObjetoPaiDTO>(objeto);
+
+                IList<[NomeTabela]DTO> listaExclusao = session.CreateCriteria(typeof([NomeTabela]DTO)).
+                    Add(Expression.Eq("Id[NomeTabelaPai]",objeto.Id)).List<[NomeTabela]DTO>();
+
+                foreach ([NomeTabela]DTO objLista in listaExclusao)
+                {
+                    session.Delete(objLista);
+                }
+
+                foreach ([NomeTabela]DTO objLista in objeto.Lista[NomeTabela])
+                {
+					objLista.Id[NomeTabelaPai] = objeto.Id;
+                    session.Save(objLista);
+                }
+
+                session.Flush();
+
+                return objeto;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+		public IList<[NomeTabelaPai]DTO> select([NomeTabelaPai]DTO objeto)
+        {
+            try
+            {
+
+                IList<[NomeTabelaPai]DTO> resultado = base.select<[NomeTabelaPai]DTO>(objeto);
+
+                foreach ([NomeTabelaPai]DTO objP in resultado)
+                {
+                    NHibernateDAL<[NomeTabela]DTO> DAL = new NHibernateDAL<[NomeTabela]DTO>(session);
+                    objP.Lista[NomeTabela] = DAL.select<[NomeTabela]DTO>(
+                        new [NomeTabela]DTO { Id[NomeTabelaPai] = objP.Id });
+                    
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public IList<[NomeTabelaPai]DTO> selectPagina(int primeiroResultado, int quantidadeResultados, [NomeTabelaPai]DTO objeto)
+        {
+            try
+            {
+                IList<[NomeTabelaPai]DTO> resultado = base.selectPagina<[NomeTabelaPai]DTO>(primeiroResultado, quantidadeResultados, objeto);
+                foreach ([NomeTabelaPai]DTO objLista in resultado)
+                {
+                    NHibernateDAL<[NomeTabela]DTO> DAL = new NHibernateDAL<[NomeTabela]DTO>(session);
+                    objLista.Lista[NomeTabela] = DAL.select<[NomeTabela]DTO>(
+                        new [NomeTabela]DTO { Id[NomeTabelaPai] = objP.Id });
+
+                }
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+		public int delete([NomeTabelaPai]DTO objeto)
+        {
+            try
+            {
+                IList<[NomeTabela]DTO> listaExclusao = session.CreateCriteria(typeof([NomeTabela]DTO)).
+                    Add(Expression.Eq("Id[NomeTabelaPai]",objeto.Id)).List<[NomeTabela]DTO>();
+
+                foreach ([NomeTabela]DTO objLista in listaExclusao)
+                {
+                    session.Delete(objLista);
+                }
+
+				int resultado = base.delete<[NomeTabelaPai]DTO>(objeto);
+
+                session.Flush();
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+    <bag name="Lista[NomeTabela]" cascade="all-delete-orphan">
+      <key column="ID_TABELA_PAI" />
+      <one-to-many class="[NomeTabela]DTO" />
+    </bag>
+		#endregion
